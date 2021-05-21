@@ -182,7 +182,7 @@ Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=always
 TimeoutStopSec=70
 ExecStartPre=/bin/rm -f %t/container-dc-metro-map.pid %t/container-dc-metro-map.ctr-id
-ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-dc-metro-map.pid --cidfile %t/container-dc-metro-map.ctr-id --cgroups=no-conmon -d --replace --name dc-metro-map -p 8080:8080 quay.io/mbach/dc-metro-map:latest
+ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-dc-metro-map.pid --cidfile %t/container-dc-metro-map.ctr-id --cgroups=no-conmon -d --replace --name dc-metro-map -p 8080:8080 quay.io/mbach/dc-metro-map:edge1
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-dc-metro-map.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/container-dc-metro-map.ctr-id
 PIDFile=%t/container-dc-metro-map.pid
