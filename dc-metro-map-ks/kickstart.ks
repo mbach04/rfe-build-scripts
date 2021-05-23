@@ -44,39 +44,6 @@ mkdir -p /var/home/core
 chown -R core: /var/home/core
 %end
 
-%post
-
-##
-## Configure the virtual router redundancy protocol for keepalived
-##
-
-# parse out boot parameters beginning with "vip"
-#cmdline=`cat /proc/cmdline`
-#params=(${cmdline// / })
-#for param in "${params[@]}"; do
-#  if [[ $param =~ "vip" ]]; then
-#    eval $param
-#  fi
-#done
-
-# write the keepalived config file with the vip params
-#cat << EOF > /etc/keepalived/keepalived.conf
-#vrrp_instance RFE_VIP {
-#    state $vip_state
-#    interface enp1s0
-#    virtual_router_id 50
-#    priority $vip_priority
-#    advert_int 1
-#    authentication {
-#        auth_type PASS
-#        auth_pass edge123
-#    }
-#    virtual_ipaddress {
-#        $VIP_IP/$VIP_MASK
-#    }
-#}
-#EOF
-%end
 
 %post
 
