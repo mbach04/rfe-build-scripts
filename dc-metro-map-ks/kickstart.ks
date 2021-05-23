@@ -35,6 +35,17 @@ ostreesetup --nogpg --url={{ rfe_tarball_url }}/repo/ --osname=rhel --remote=edg
 
 
 %post
+# enable 8080 through the firewall
+cat << EOF > /etc/systemd/system/enable-web-app.service
+[Unit]
+Wants=firewalld.service
+After=firewalld.service
+
+[Service]
+Type=oneshot
+ExecStart=firewall-cmd --add-port=8080/tcp --permanent
+ExecStartPost=firewall-cmd --reload
+
 
 ##
 ## Create 'core' user home directory if it doesn't exist
@@ -149,7 +160,7 @@ Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=always
 TimeoutStopSec=70
 ExecStartPre=/bin/rm -f %t/container-dc-metro-map.pid %t/container-dc-metro-map.ctr-id
-ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-dc-metro-map.pid --cidfile %t/container-dc-metro-map.ctr-id --cgroups=no-conmon -d --replace --name dc-metro-map -p 8080:8080 quay.io/mbach/dc-metro-map:edge1
+ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-dc-metro-map.pid --cidfile %t/container-dc-metro-map.ctr-id --cgroups=no-conmon -d --replace --label io.containers.autoupdate=image  --name dc-metro-map -p 8080:8080 quay.io/mbach/dc-metro-map:edge1
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-dc-metro-map.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/container-dc-metro-map.ctr-id
 PIDFile=%t/container-dc-metro-map.pid
@@ -218,8 +229,6 @@ ln -s /var/home/core/.config/systemd/user/container-dc-metro-map.service /var/ho
 chown -R core: /var/home/core
 restorecon -vFr /var/home/core
 
-# open ports for webapp
-firewall-cmd --permanent --add-port=8080/tcp
 
 # enable linger so user services run whether user logged in or not
 cat << EOF > /etc/systemd/system/enable-linger.service
