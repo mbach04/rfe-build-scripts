@@ -218,6 +218,9 @@ ln -s /var/home/core/.config/systemd/user/container-dc-metro-map.service /var/ho
 chown -R core: /var/home/core
 restorecon -vFr /var/home/core
 
+# open ports for webapp
+firewall-cmd --permanent --add-port=8080/tcp
+
 # enable linger so user services run whether user logged in or not
 cat << EOF > /etc/systemd/system/enable-linger.service
 [Service]
