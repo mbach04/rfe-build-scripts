@@ -25,14 +25,14 @@ text
 # activate network devices and configure with DHCP
 network --bootproto=dhcp --noipv6
 
-# Kickstart requires that we create default user 'core' with sudo
-# privileges using password 'edge'
-user --name=core --groups=wheel --password=redhat --homedir=/var/home/core
+# create default user with sudo privileges
+user --name={{ rfe_user | default('core') }} --groups=wheel --password={{ rfe_password | default('edge') }}
 
 # set up the OSTree-based install with disabled GPG key verification, the base
 # URL to pull the installation content, 'rhel' as the management root in the
 # repo, and 'rhel/8/x86_64/edge' as the branch for the installation
-ostreesetup --nogpg --osname=rhel --remote=edge --url=http://httpd.apps.cluster-ad0c.ad0c.sandbox1728.opentlc.com/repo/ --ref=rhel/8/x86_64/edge
+ostreesetup --nogpg --url={{ rfe_tarball_url }}/repo/ --osname=rhel --remote=edge --ref=rhel/8/x86_64/edge
+
 
 %post
 
