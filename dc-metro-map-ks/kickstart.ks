@@ -219,11 +219,24 @@ OnUnitActiveSec=30
 WantedBy=timers.target
 EOF
 
+# pre-pull the container images at startup to avoid delay in http response
+cat > /var/home/core/.config/systemd/user/pre-pull-container-image.service <<EOF
+[Service]
+Type=oneshot
+ExecStart=podman pull quay.io/mbach/dc-metro-map:edge1
+
+[Install]
+WantedBy=multi-user.target default.target
+EOF
 
 # enable timer
 ln -s /var/home/core/.config/systemd/user/podman-auto-update.timer /var/home/core/.config/systemd/user/timers.target.wants/podman-auto-update.timer
 ln -s /var/home/core/.config/systemd/user/container-dc-metro-map.service /var/home/core/.config/systemd/user/default.target.wants/container-dc-metro-map.service
 ln -s /var/home/core/.config/systemd/user/container-dc-metro-map.service /var/home/core/.config/systemd/user/multi-user.target.wants/container-dc-metro-map.service
+
+# enable pre-pull container image
+ln -s /var/home/core/.config/systemd/user/pre-pull-container-image.service /var/home/core/.config/systemd/user/default.target.wants/pre-pull-container-image.service
+ln -s /var/home/core/.config/systemd/user/pre-pull-container-image.service /var/home/core/.config/systemd/user/multi-user.target.wants/pre-pull-container-image.servi
 
 # fix ownership of user local files and SELinux contexts
 chown -R core: /var/home/core
