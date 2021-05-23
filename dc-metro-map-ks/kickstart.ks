@@ -46,6 +46,12 @@ Type=oneshot
 ExecStart=firewall-cmd --add-port=8080/tcp --permanent
 ExecStartPost=firewall-cmd --reload
 
+[Install]
+WantedBy=multi-user.target default.target
+EOF
+
+systemctl enable enable-web-app.service
+
 
 ##
 ## Create 'core' user home directory if it doesn't exist
