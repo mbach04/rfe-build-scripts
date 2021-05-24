@@ -4,6 +4,11 @@ version = "0.0.1"
 modules = []
 groups = []
 
+
+[[packages]]
+name = "bind-utils"
+version = "*"
+
 [[packages]]
 name = "fuse-overlayfs"
 version = "*"
